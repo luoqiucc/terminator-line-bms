@@ -1,0 +1,17 @@
+# idea
+/.idea/
+
+# node.js
+/node_modules/
+/package-lock.json
+
+# app
+/public/
+
+# env
+.env
+.env.development
+
+# test
+/test.js
+
