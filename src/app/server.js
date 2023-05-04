@@ -6,6 +6,7 @@ const koaStatic = require('koa-static')
 const {loginCheck} = require('../middleware/auth.middleware')
 const {exceptionHandler} = require('../exception/exception-kit')
 const tlRouter = require('../router/tl.router')
+const passportRouter = require('../router/passport.router')
 const userRouter = require('../router/user.router')
 
 const server = new Koa()
@@ -24,6 +25,8 @@ server
     .use(tlRouter.allowedMethods())
     .use(userRouter.routes())
     .use(userRouter.allowedMethods())
+    .use(passportRouter.routes())
+    .use(passportRouter.allowedMethods())
 
 server.on('exception', exceptionHandler)
 

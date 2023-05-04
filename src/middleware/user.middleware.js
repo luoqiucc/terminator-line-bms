@@ -3,21 +3,6 @@ const {throwKoaException} = require('../exception/exception-kit')
 const exceptionType = require('../exception/exception-type')
 
 const validateCreateUserRequest = async (ctx, next) => {
-
-    let role = false
-
-    const userCount = await userService.count()
-
-    const USER_TOKEN = ctx['USER_TOKEN']
-
-    if (userCount === 0) {
-        role = true
-    } else {
-        if (!USER_TOKEN || !USER_TOKEN['role']) {
-            return throwKoaException(exceptionType.PERMISSION_DENIED, ctx)
-        }
-    }
-
     const {username = '', email = '', password = ''} = ctx.request.body
 
     if (!email.trim() || !password.trim()) {
@@ -31,6 +16,20 @@ const validateCreateUserRequest = async (ctx, next) => {
     const regular = /^[a-z,A-Z,0-9]+@[a-z,A-Z]+.[a-z,A-Z]+$/
     if (!email.match(regular)) {
         return throwKoaException(exceptionType.EMAIL_FORMAT_ERROR, ctx)
+    }
+
+    let role = false
+    const USER_TOKEN = ctx['USER_TOKEN']
+    const userCount = await userService.count()
+    if (userCount === 0) {
+        role = true
+    } else {
+        if (USER_TOKEN === null) {
+            return throwKoaException(exceptionType.TOKEN_INVALID, ctx)
+        }
+        if (!USER_TOKEN['role']) {
+            return throwKoaException(exceptionType.PERMISSION_DENIED, ctx)
+        }
     }
 
     const result = await userService.findOneByEmail(email)
@@ -48,23 +47,54 @@ const validateCreateUserRequest = async (ctx, next) => {
     await next()
 }
 
-// TODO: 等待重构
 const validateUpdateUserRequest = async (ctx, next) => {
-    const uid = ctx.USER_TOKEN['uid']
+    const USER_TOKEN = ctx['USER_TOKEN']
+    if (USER_TOKEN === null) {
+        return throwKoaException(exceptionType.TOKEN_INVALID, ctx)
+    }
+
     const {username, bio} = ctx.request.body
 
-    if (typeof (username) === 'undefined' || typeof (bio) === 'undefined') {
-        return throwKoaException(exceptionType.PARAMETER_ERROR, ctx)
+    const updateUserRequest = {}
+
+    if (typeof (username) !== 'undefined') {
+        if (username.length > 255) {
+            return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
+        }
+        updateUserRequest.username = username
     }
 
-    if (username.length > 30 || bio.length > 200) {
-        return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
+    if (typeof (bio) !== 'undefined') {
+        if (bio.length > 255) {
+            return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
+        }
+        updateUserRequest.bio = bio
     }
 
-    ctx.updateUserRequest = {
-        uid,
-        username,
-        bio
+    ctx.updateUserRequest = updateUserRequest
+
+    await next()
+}
+
+const validateRemoveUserRequest = async (ctx, next) => {
+    const USER_TOKEN = ctx['USER_TOKEN']
+    if (USER_TOKEN === null) {
+        return throwKoaException(exceptionType.TOKEN_INVALID, ctx)
+    }
+
+    const {uuid} = ctx.params
+
+    if (!USER_TOKEN['role']) {
+        return throwKoaException(exceptionType.PERMISSION_DENIED, ctx)
+    }
+
+    if (USER_TOKEN['uuid'] === uuid) {
+        return throwKoaException(exceptionType.PERMISSION_DENIED, ctx)
+    }
+
+    const result = await userService.findOneByUUID(uuid)
+    if (result === null) {
+        return throwKoaException(exceptionType.USER_NOT_FOUND, ctx)
     }
 
     await next()
@@ -72,5 +102,6 @@ const validateUpdateUserRequest = async (ctx, next) => {
 
 module.exports = {
     validateCreateUserRequest,
-    validateUpdateUserRequest
+    validateUpdateUserRequest,
+    validateRemoveUserRequest
 }
