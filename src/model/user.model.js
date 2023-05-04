@@ -1,5 +1,6 @@
 const {Model, DataTypes} = require('sequelize')
 const sequelize = require('../app/database')
+const {passwordEncoding} = require('../util/auth')
 
 class User extends Model {
     // user
@@ -15,16 +16,23 @@ User.init(
             type: DataTypes.STRING
         },
         email: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
         },
         password: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
+            set(value) {
+                this.setDataValue('password', passwordEncoding(value));
+            }
         },
         bio: {
             type: DataTypes.STRING
         },
         role: {
-            type: DataTypes.BOOLEAN
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },
     {

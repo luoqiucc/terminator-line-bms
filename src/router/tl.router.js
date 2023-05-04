@@ -3,7 +3,10 @@ const Router = require('@koa/router')
 const tlRouter = new Router()
 
 tlRouter.all('/tl', (ctx) => {
-    ctx.body = 'Terminator Line >_<'
+    ctx.body = {
+        text: 'Terminator Line >_<',
+        from: '@shadowsong'
+    }
 })
 
 module.exports = tlRouter
