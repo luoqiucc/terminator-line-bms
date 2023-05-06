@@ -2,7 +2,7 @@ const userService = require('../service/user.service')
 const {throwKoaException} = require('../exception/exception-kit')
 const exceptionType = require('../exception/exception-type')
 
-const validateCreateUserRequest = async (ctx, next) => {
+const validateUserCreateRequest = async (ctx, next) => {
     const {username = '', email = '', password = ''} = ctx.request.body
 
     if (!email.trim() || !password.trim()) {
@@ -47,7 +47,7 @@ const validateCreateUserRequest = async (ctx, next) => {
     await next()
 }
 
-const validateUpdateUserRequest = async (ctx, next) => {
+const validateUserUpdateRequest = async (ctx, next) => {
     const USER_TOKEN = ctx['USER_TOKEN']
     if (USER_TOKEN === null) {
         return throwKoaException(exceptionType.TOKEN_INVALID, ctx)
@@ -55,28 +55,28 @@ const validateUpdateUserRequest = async (ctx, next) => {
 
     const {username, bio} = ctx.request.body
 
-    const updateUserRequest = {}
+    const userUpdateRequest = {}
 
     if (typeof (username) !== 'undefined') {
         if (username.length > 255) {
             return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
         }
-        updateUserRequest.username = username
+        userUpdateRequest.username = username
     }
 
     if (typeof (bio) !== 'undefined') {
         if (bio.length > 255) {
             return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
         }
-        updateUserRequest.bio = bio
+        userUpdateRequest.bio = bio
     }
 
-    ctx.updateUserRequest = updateUserRequest
+    ctx.userUpdateRequest = userUpdateRequest
 
     await next()
 }
 
-const validateRemoveUserRequest = async (ctx, next) => {
+const validateUserRemoveRequest = async (ctx, next) => {
     const USER_TOKEN = ctx['USER_TOKEN']
     if (USER_TOKEN === null) {
         return throwKoaException(exceptionType.TOKEN_INVALID, ctx)
@@ -101,7 +101,7 @@ const validateRemoveUserRequest = async (ctx, next) => {
 }
 
 module.exports = {
-    validateCreateUserRequest,
-    validateUpdateUserRequest,
-    validateRemoveUserRequest
+    validateUserCreateRequest,
+    validateUserUpdateRequest,
+    validateUserRemoveRequest
 }

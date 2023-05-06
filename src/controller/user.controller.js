@@ -1,4 +1,6 @@
 const userService = require('../service/user.service')
+const {throwKoaException} = require('../exception/exception-kit')
+const exceptionType = require('../exception/exception-type')
 
 class UserController {
     async list(ctx) {
@@ -10,7 +12,6 @@ class UserController {
 
         result['users'].forEach(
             (data) => {
-                delete data['dataValues']['password']
                 userList.push(data['dataValues'])
             }
         )
@@ -25,6 +26,19 @@ class UserController {
         }
     }
 
+    async detail(ctx) {
+        const {uuid} = ctx.params
+        const user = await userService.findOneByUUID(uuid)
+
+        if (user === null) {
+            return throwKoaException(exceptionType.USER_NOT_FOUND, ctx)
+        }
+
+        delete user['dataValues']['password']
+
+        ctx.body = user['dataValues']
+    }
+
     async create(ctx) {
         const userCreateRequest = ctx['userCreateRequest']
         await userService.create(userCreateRequest)
@@ -34,9 +48,9 @@ class UserController {
 
     async update(ctx) {
         const uuid = ctx['USER_TOKEN']['uuid']
-        const updateUserRequest = ctx['updateUserRequest']
-        await userService.updateByUUID(uuid, updateUserRequest)
-        ctx.body = updateUserRequest
+        const userUpdateRequest = ctx['userUpdateRequest']
+        await userService.updateByUUID(uuid, userUpdateRequest)
+        ctx.body = userUpdateRequest
     }
 
     async remove(ctx) {

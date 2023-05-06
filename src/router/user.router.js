@@ -1,22 +1,24 @@
 const Router = require('@koa/router')
 const {
     list,
+    detail,
     create,
     update,
     remove
 } = require('../controller/user.controller')
 const {
-    validateCreateUserRequest,
-    validateUpdateUserRequest,
-    validateRemoveUserRequest
+    validateUserCreateRequest,
+    validateUserUpdateRequest,
+    validateUserRemoveRequest
 } = require('../middleware/user.middleware')
 
 const userRouter = new Router()
 
 userRouter
     .get('/users', list)
-    .post('/user', validateCreateUserRequest, create)
-    .put('/user', validateUpdateUserRequest, update)
-    .del('/user/:uuid', validateRemoveUserRequest, remove)
+    .get('/user/:uuid', detail)
+    .post('/user', validateUserCreateRequest, create)
+    .put('/user', validateUserUpdateRequest, update)
+    .del('/user/:uuid', validateUserRemoveRequest, remove)
 
 module.exports = userRouter

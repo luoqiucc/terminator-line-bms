@@ -18,12 +18,14 @@ const validateLoginRequest = async (ctx, next) => {
     if (result === null) {
         return throwKoaException(exceptionType.USER_NOT_FOUND, ctx)
     }
+
     const user = result['dataValues']
     if (passwordEncoding(password) !== user['password']) {
         return throwKoaException(exceptionType.AUTHENTICATION_FAILED, ctx)
     }
 
     ctx.user = {
+        id: user['id'],
         uuid: user['uuid'],
         role: user['role']
     }

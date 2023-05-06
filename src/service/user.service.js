@@ -1,18 +1,22 @@
-const userModel = require('../model/user.model')
+const {userModel} = require('../model')
 
 class UserService {
     async count() {
-        return await userModel.count()
+        return userModel.count()
     }
 
     // TODO: 搜索
     async search() {
+
     }
 
     async list(page, size) {
         const count = await userModel.count()
 
         const users = await userModel.findAll({
+            attributes: {
+                exclude: ['password']
+            },
             offset: (page - 1) * size,
             limit: size
         })
@@ -24,11 +28,11 @@ class UserService {
     }
 
     async create(userCreateRequest) {
-        return await userModel.create(userCreateRequest)
+        return userModel.create(userCreateRequest)
     }
 
     async findOneByEmail(email) {
-        return await userModel.findOne({
+        return userModel.findOne({
             where: {
                 email
             }
@@ -36,7 +40,7 @@ class UserService {
     }
 
     async findOneByUUID(uuid) {
-        return await userModel.findOne({
+        return userModel.findOne({
             where: {
                 uuid
             }
@@ -44,7 +48,7 @@ class UserService {
     }
 
     async updateByUUID(uuid, updateUserRequest) {
-        return await userModel.update(updateUserRequest, {
+        return userModel.update(updateUserRequest, {
             where: {
                 uuid
             }
@@ -52,7 +56,7 @@ class UserService {
     }
 
     async removeByUUID(uuid) {
-        return await userModel.destroy({
+        return userModel.destroy({
             where: {
                 uuid
             }

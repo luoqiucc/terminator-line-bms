@@ -1,13 +1,7 @@
-const {Model, DataTypes} = require('sequelize')
-const sequelize = require('../app/database')
 const {passwordEncoding} = require('../util/auth')
 
-class User extends Model {
-    // user
-}
-
-User.init(
-    {
+const user = (sequelize, DataTypes) => {
+    return sequelize.define('User', {
         uuid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4
@@ -34,10 +28,7 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false
         }
-    },
-    {
-        sequelize
-    }
-)
+    })
+}
 
-module.exports = User
+module.exports = user

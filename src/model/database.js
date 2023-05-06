@@ -5,7 +5,7 @@ const {
     MYSQL_DATABASE,
     MYSQL_USER,
     MYSQL_PASSWORD
-} = require('./config')
+} = require('../app/config')
 
 const sequelize = new Sequelize(
     MYSQL_DATABASE,
