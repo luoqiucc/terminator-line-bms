@@ -43,6 +43,7 @@ class UserController {
         const userCreateRequest = ctx['userCreateRequest']
         await userService.create(userCreateRequest)
         delete userCreateRequest['password']
+
         ctx.body = userCreateRequest
     }
 
@@ -50,12 +51,14 @@ class UserController {
         const uuid = ctx['USER_TOKEN']['uuid']
         const userUpdateRequest = ctx['userUpdateRequest']
         await userService.updateByUUID(uuid, userUpdateRequest)
+
         ctx.body = userUpdateRequest
     }
 
     async remove(ctx) {
         const {uuid} = ctx.params
         await userService.removeByUUID(uuid)
+
         ctx.body = ''
     }
 }

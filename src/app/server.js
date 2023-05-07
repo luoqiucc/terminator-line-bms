@@ -9,6 +9,7 @@ const tlRouter = require('../router/tl.router')
 const passportRouter = require('../router/passport.router')
 const userRouter = require('../router/user.router')
 const postRouter = require('../router/post.router')
+const commentRouter = require('../router/comment.router')
 
 const server = new Koa()
 
@@ -30,6 +31,8 @@ server
     .use(userRouter.allowedMethods())
     .use(postRouter.routes())
     .use(postRouter.allowedMethods())
+    .use(commentRouter.routes())
+    .use(commentRouter.allowedMethods())
 
 server
     .on('exception', exceptionHandler)

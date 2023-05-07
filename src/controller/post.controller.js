@@ -32,12 +32,14 @@ class PostController {
         if (post === null) {
             return throwKoaException(exceptionType.POST_NOT_FOUND, ctx)
         }
+
         ctx.body = post['dataValues']
     }
 
     async create(ctx) {
         const postCreateRequest = ctx['postCreateRequest']
         const result = await postService.create(postCreateRequest)
+
         ctx.body = {
             uuid: result['dataValues']['uuid'],
             ...postCreateRequest
@@ -48,12 +50,14 @@ class PostController {
         const {uuid} = ctx.params
         const postUpdateRequest = ctx['postUpdateRequest']
         await postService.updateByUUID(uuid, postUpdateRequest)
+
         ctx.body = postUpdateRequest
     }
 
     async remove(ctx) {
         const {uuid} = ctx.params
         await postService.removeByUUID(uuid)
+
         ctx.body = ''
     }
 }

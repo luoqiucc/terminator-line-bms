@@ -15,6 +15,10 @@ module.exports = {
         status: 404,
         err_msg: '帖子不存在'
     },
+    COMMENT_NOT_FOUND: {
+        status: 404,
+        err_msg: '评论不存在'
+    },
     FORM_EMPTY: {
         status: 400,
         err_msg: '表单有必填项为空'

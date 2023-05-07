@@ -44,11 +44,11 @@ const validatePostUpdateRequest = async (ctx, next) => {
     const postUpdateRequest = {}
 
     if (typeof (title) !== 'undefined') {
-        if (title.length > 255) {
-            return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
-        }
         if (!title.trim()) {
             return throwKoaException(exceptionType.FORM_EMPTY, ctx)
+        }
+        if (title.length > 255) {
+            return throwKoaException(exceptionType.TEXT_TO_LONG, ctx)
         }
 
         postUpdateRequest.title = title
