@@ -100,8 +100,27 @@ const validateUserRemoveRequest = async (ctx, next) => {
     await next()
 }
 
+const validateUserDetailRequest = async (ctx, next) => {
+    const USER_TOKEN = ctx['USER_TOKEN']
+    let {uuid = ''} = ctx.params
+
+    if (!uuid || !uuid.trim()) {
+        if (USER_TOKEN === null) {
+            return throwKoaException(exceptionType.PARAMETER_ERROR, ctx)
+        }
+        uuid = USER_TOKEN['uuid']
+    }
+
+    ctx.userDetailRequest = {
+        uuid
+    }
+
+    await next()
+}
+
 module.exports = {
     validateUserCreateRequest,
     validateUserUpdateRequest,
-    validateUserRemoveRequest
+    validateUserRemoveRequest,
+    validateUserDetailRequest
 }

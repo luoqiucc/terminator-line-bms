@@ -10,7 +10,15 @@ class CommentController {
     async list(ctx) {
         const {page = '1', size = '20'} = ctx.query
         const {postId} = ctx.commentListRequest
-        const result = await commentService.listByPostId(postId, Number(page), Number(size))
+
+        let result
+
+        // TODO: 临时修复，总感觉不够优雅，后面优化
+        try {
+            result = await commentService.listByPostId(postId, Number(page), Number(size))
+        } catch (e) {
+            return throwKoaException(exceptionType.PARAMETER_ERROR, ctx)
+        }
 
         const commentList = []
 

@@ -39,11 +39,7 @@ class PostService {
     }
 
     async create(postCreateRequest) {
-        return postModel.create(postCreateRequest, {
-            include: {
-                model: userModel
-            }
-        })
+        return postModel.create(postCreateRequest)
     }
 
     async updateByUUID(uuid, postUpdateRequest) {

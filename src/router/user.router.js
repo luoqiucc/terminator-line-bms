@@ -9,14 +9,16 @@ const {
 const {
     validateUserCreateRequest,
     validateUserUpdateRequest,
-    validateUserRemoveRequest
+    validateUserRemoveRequest,
+    validateUserDetailRequest
 } = require('../middleware/user.middleware')
 
 const userRouter = new Router()
 
 userRouter
     .get('/users', list)
-    .get('/user/:uuid', detail)
+    .get('/user', validateUserDetailRequest, detail)
+    .get('/user/:uuid', validateUserDetailRequest, detail)
     .post('/user', validateUserCreateRequest, create)
     .put('/user', validateUserUpdateRequest, update)
     .del('/user/:uuid', validateUserRemoveRequest, remove)
