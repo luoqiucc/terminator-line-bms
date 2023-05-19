@@ -2,6 +2,19 @@ const postService = require('../service/post.service')
 const {throwKoaException} = require('../exception/exception-kit')
 const exceptionType = require('../exception/exception-type')
 
+const validatePostListRequest = async (ctx, next) => {
+    const {userUUID = ''} = ctx.query
+    let where = {}
+
+    if (userUUID.trim()) {
+        where.uuid = userUUID
+    }
+
+    ctx.where = where
+
+    await next()
+}
+
 const validatePostCreateRequest = async (ctx, next) => {
     const USER_TOKEN = ctx['USER_TOKEN']
     if (USER_TOKEN === null) {
@@ -84,6 +97,7 @@ const validatePostRemoveRequest = async (ctx, next) => {
 }
 
 module.exports = {
+    validatePostListRequest,
     validatePostCreateRequest,
     validatePostUpdateRequest,
     validatePostRemoveRequest

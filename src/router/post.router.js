@@ -7,6 +7,7 @@ const {
     remove
 } = require('../controller/post.controller')
 const {
+    validatePostListRequest,
     validatePostCreateRequest,
     validatePostUpdateRequest,
     validatePostRemoveRequest
@@ -15,7 +16,7 @@ const {
 const postRouter = new Router()
 
 postRouter
-    .get('/posts', list)
+    .get('/posts', validatePostListRequest, list)
     .get('/post/:uuid', detail)
     .post('/post', validatePostCreateRequest, create)
     .put('/post/:uuid', validatePostUpdateRequest, update)

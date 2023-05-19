@@ -1,8 +1,13 @@
 const {postModel, userModel} = require('../model')
 
 class PostService {
-    async list(page, size) {
-        const count = await postModel.count()
+    async list(where, page, size) {
+        const count = await postModel.count({
+            include: {
+                model: userModel,
+                where
+            }
+        })
 
         const posts = await postModel.findAll({
             attributes: {
@@ -14,7 +19,8 @@ class PostService {
                 model: userModel,
                 attributes: {
                     exclude: ['password']
-                }
+                },
+                where
             }
         })
 

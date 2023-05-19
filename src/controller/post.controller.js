@@ -5,12 +5,12 @@ const exceptionType = require('../exception/exception-type')
 class PostController {
     async list(ctx) {
         const {page = '1', size = '10'} = ctx.query
-
+        let where = ctx['where']
         let result
 
         // TODO: 临时修复，总感觉不够优雅，后面优化
         try {
-            result = await postService.list(Number(page), Number(size))
+            result = await postService.list(where, Number(page), Number(size))
         } catch (e) {
             return throwKoaException(exceptionType.PARAMETER_ERROR, ctx)
         }
