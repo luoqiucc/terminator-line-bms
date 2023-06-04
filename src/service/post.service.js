@@ -11,8 +11,11 @@ class PostService {
 
         const posts = await postModel.findAll({
             attributes: {
-                exclude: ['body']
+                exclude: []
             },
+            order: [
+                ['createdAt', 'DESC'],
+            ],
             offset: (page - 1) * size,
             limit: size,
             include: {

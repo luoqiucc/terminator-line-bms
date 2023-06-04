@@ -20,7 +20,7 @@ const consoleWarring = () => {
 }
 
 const consoleError = (message, error) => {
-    console.log(getTime() + `Error: ${message}\n` + error)
+    console.log(getTime() + `<ERROR !>: ${message}\n` + error)
 }
 
 module.exports = {

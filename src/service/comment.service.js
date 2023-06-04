@@ -12,6 +12,9 @@ class CommentService {
             where: {
                 PostId: postId
             },
+            order: [
+                ['createdAt', 'DESC'],
+            ],
             offset: (page - 1) * size,
             limit: size,
         })
